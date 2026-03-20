@@ -45,9 +45,9 @@ const menuItems = [
     title: "成绩管理",
     icon: ClipboardList,
     items: [
-      { title: "成绩录入", url: "/about" },
+      { title: "成绩录入", url: "/scoreInput" },
       { title: "成绩查询", url: "/score/query" },
-      { title: "统计分析", url: "/score/analysis" },
+      { title: "统计分析", url: "/scoreAnalyze" },
     ],
   },
   {
@@ -60,6 +60,11 @@ const menuItems = [
     ],
   },
 ]
+
+interface AppSidebarProps {
+  currentPage: string
+  setCurrentPage: (page: string) => void
+}
 
 export function MySidebarHeader() {
   return (
@@ -121,13 +126,10 @@ export function MySidebarFooter() {
   )
 }
 
-export function AppSidebar() {
+export function AppSidebar({currentPage, setCurrentPage}: AppSidebarProps) {
   const navigate = useNavigate()
   const handleNavigation = (url: string) => {
-    if (url === "www.baidu.com") {
-      window.open(url)
-    }
-    navigate(url)
+    setCurrentPage(url)
   }
   return (
     <Sidebar collapsible="icon">
