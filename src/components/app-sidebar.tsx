@@ -28,6 +28,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { useNavigate } from "react-router-dom"
 
 // 菜单项。
 const menuItems = [
@@ -44,7 +45,7 @@ const menuItems = [
     title: "成绩管理",
     icon: ClipboardList,
     items: [
-      { title: "成绩录入", url: "/score/input" },
+      { title: "成绩录入", url: "/about" },
       { title: "成绩查询", url: "/score/query" },
       { title: "统计分析", url: "/score/analysis" },
     ],
@@ -121,6 +122,13 @@ export function MySidebarFooter() {
 }
 
 export function AppSidebar() {
+  const navigate = useNavigate()
+  const handleNavigation = (url: string) => {
+    if (url === "www.baidu.com") {
+      window.open(url)
+    }
+    navigate(url)
+  }
   return (
     <Sidebar collapsible="icon">
       <MySidebarHeader />
@@ -149,10 +157,9 @@ export function AppSidebar() {
                       <SidebarMenuSub>
                         {item.items.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuButton asChild>
-                              <a href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </a>
+                            <SidebarMenuButton 
+                            onClick={() => handleNavigation(subItem.url)}> 
+                              <span>{subItem.title}</span>
                             </SidebarMenuButton>
                           </SidebarMenuSubItem>
                         ))}
