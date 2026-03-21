@@ -1,9 +1,26 @@
-import { app, BrowserWindow } from "electron";
+import { ipcMain, app, BrowserWindow } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import fs from "fs";
 createRequire(import.meta.url);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
+ipcMain.handle("save-file", async (event, { fileName, buffer }) => {
+  try {
+    const baseDir = app.getPath("documents");
+    const saveDir = path.join(baseDir, "ScoreApp");
+    if (!fs.existsSync(saveDir)) {
+      fs.mkdirSync(saveDir, { recursive: true });
+    }
+    const filePath = path.join(saveDir, fileName);
+    fs.writeFileSync(filePath, Buffer.from(buffer));
+    console.log("File saved to:", filePath);
+    return { filePath };
+  } catch (error) {
+    console.error("Save file error:", error);
+    throw error;
+  }
+});
 process.env.APP_ROOT = path.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -14,7 +31,9 @@ function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
-      preload: path.join(__dirname$1, "preload.mjs")
+      preload: path.join(__dirname$1, "preload.mjs"),
+      contextIsolation: true,
+      nodeIntegration: false
     }
   });
   win.webContents.on("did-finish-load", () => {

@@ -20,3 +20,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   // You can expose other APTs you need here.
   // ...
 });
+electron.contextBridge.exposeInMainWorld("electronAPI", {
+  saveFile: (fileName, buffer) => electron.ipcRenderer.invoke("save-file", { fileName, buffer })
+});

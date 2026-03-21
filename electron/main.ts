@@ -1,11 +1,36 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import fs from 'fs'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+
+// 注册 IPC 处理器
+ipcMain.handle("save-file", async (event, { fileName, buffer }) => {
+    try {
+    // 选择保存目录
+    const baseDir = app.getPath('documents')
+    const saveDir = path.join(baseDir, 'ScoreApp')
+    
+    // 创建目录
+    if (!fs.existsSync(saveDir)) {
+      fs.mkdirSync(saveDir, { recursive: true })
+    }
+    
+    // 保存文件
+    const filePath = path.join(saveDir, fileName)
+    fs.writeFileSync(filePath, Buffer.from(buffer))
+    
+    console.log('File saved to:', filePath)
+    return { filePath }
+  } catch (error) {
+    console.error('Save file error:', error)
+    throw error
+  }
+})
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -31,6 +56,8 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   })
 
