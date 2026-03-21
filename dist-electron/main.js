@@ -1,4 +1,4 @@
-import { ipcMain, app, BrowserWindow } from "electron";
+import { ipcMain, app, dialog, BrowserWindow } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -19,6 +19,36 @@ ipcMain.handle("save-file", async (event, { fileName, buffer }) => {
   } catch (error) {
     console.error("Save file error:", error);
     throw error;
+  }
+});
+ipcMain.handle("download-file", async () => {
+  try {
+    const baseDir = app.getPath("documents");
+    const templatePath = path.join(baseDir, "/ScoreApp/test.csv");
+    if (!fs.existsSync(templatePath)) {
+      throw new Error("Template file not found");
+    }
+    const buffer = fs.readFileSync(templatePath);
+    const result = await dialog.showSaveDialog({
+      defaultPath: "test.csv",
+      filters: [
+        { name: "Excel Files", extensions: ["csv"] }
+      ]
+    });
+    if (result.canceled || !result.filePath) {
+      return { success: false, message: "Download canceled" };
+    }
+    fs.writeFileSync(result.filePath, buffer);
+    return {
+      success: true,
+      filePath: result.filePath,
+      message: "Template downloaded successfully"
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "Failed to download template"
+    };
   }
 });
 process.env.APP_ROOT = path.join(__dirname$1, "..");

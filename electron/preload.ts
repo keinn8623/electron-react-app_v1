@@ -26,5 +26,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 })
 contextBridge.exposeInMainWorld('electronAPI', {
   saveFile: (fileName: string, buffer: Uint8Array) => 
-    ipcRenderer.invoke('save-file', { fileName, buffer })
+    ipcRenderer.invoke('save-file', { fileName, buffer }),
+  downloadFile: () => ipcRenderer.invoke('download-file'),
 })

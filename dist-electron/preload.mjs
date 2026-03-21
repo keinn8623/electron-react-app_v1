@@ -21,5 +21,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   // ...
 });
 electron.contextBridge.exposeInMainWorld("electronAPI", {
-  saveFile: (fileName, buffer) => electron.ipcRenderer.invoke("save-file", { fileName, buffer })
+  saveFile: (fileName, buffer) => electron.ipcRenderer.invoke("save-file", { fileName, buffer }),
+  downloadFile: () => electron.ipcRenderer.invoke("download-file")
 });

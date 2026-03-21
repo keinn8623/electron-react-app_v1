@@ -11,12 +11,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useState } from "react"
+import ScoreSearch from "@/pages/score/ScoreSearch"
 
 // 页面组件映射
 const pageComponents: Record<string, React.ReactNode> = {
   "/about": <About />,
   "/scoreInput": <ScoreInput />,
   "/scoreAnalyze": <ScoreAnalyze />,
+  "/scoreSearch": <ScoreSearch />,
 }
 const Home = ({ children }: { children?: React.ReactNode }) => {
   const [currentPage, setCurrentPage] = useState<string>("/about")
@@ -24,7 +26,7 @@ const Home = ({ children }: { children?: React.ReactNode }) => {
     <TooltipProvider>
       <SidebarProvider defaultOpen={true} style={{ "--sidebar-width": "11rem" }}>
         <AppSidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-        <main className="flex-l w-full flex flex-col h-full">
+        <main className="flex-l w-full flex flex-col h-full h-screen">
           <SidebarTrigger />
           {children}
           <div className="content flex-l w-full h-full bg-gray-50">

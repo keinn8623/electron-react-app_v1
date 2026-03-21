@@ -46,7 +46,7 @@ const menuItems = [
     icon: ClipboardList,
     items: [
       { title: "成绩录入", url: "/scoreInput" },
-      { title: "成绩查询", url: "/score/query" },
+      { title: "成绩查询", url: "/scoreSearch" },
       { title: "统计分析", url: "/scoreAnalyze" },
     ],
   },
