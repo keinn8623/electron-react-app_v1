@@ -14,34 +14,34 @@ import { DataTable } from "@/components/data-table"
 import { useRef, ChangeEvent, useEffect, useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table"
 import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-  type ColumnDef,
-  type ColumnFiltersState,
-  type SortingState,
-  type VisibilityState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable,
+    type ColumnDef,
+    type ColumnFiltersState,
+    type SortingState,
+    type VisibilityState,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
 interface ElectronAPI {
@@ -55,21 +55,54 @@ declare global {
 }
 
 
-export type Payment = {
-  id: string
-  name: string
-  clazz: string
-  textNo: string
-  totalScore: number
-  averageScore: number
-  maxScore: number
-  minScore: number
-  errNum: number[]
+export type GradeData = {
+    id: string
+    name: string
+    clazz: string
+    textNo: string
+    totalScore: number
+    averageScore: number
+    maxScore: number
+    minScore: number
+    errNum: number[]
 }
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<GradeData>[] = [
+    // 选择行
+    {
+        id: "select",
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && "indeterminate")
+                }
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="全选"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="选择行"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
     {
         accessorKey: "name",
-        header: "Name",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Name
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "clazz",
@@ -77,15 +110,45 @@ export const columns: ColumnDef<Payment>[] = [
     },
     {
         accessorKey: "textNo",
-        header: "TextNo",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    TextNo
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "totalScore",
-        header: "TotalScore",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    TotalScore
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "averageScore",
-        header: "AverageScore",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    AverageScore
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "maxScore",
@@ -101,18 +164,51 @@ export const columns: ColumnDef<Payment>[] = [
     },
 ]
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<GradeData[]> {
     return [
         {
             id: "m5gr84i",
             name: "张纯菁",
             clazz: "5秋综合刷题C班",
             textNo: "C01",
-            totalScore: 80,
-            averageScore:65.5,
+            totalScore: 76,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+        {
+            id: "m5gr84i",
+            name: "张纯菁",
+            clazz: "5秋综合刷题C班",
+            textNo: "C01",
+            totalScore: 55,
+            averageScore: 65.5,
+            maxScore: 90,
+            minScore: 55.4,
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+        {
+            id: "m5gr84i",
+            name: "张纯菁",
+            clazz: "5秋综合刷题C班",
+            textNo: "C01",
+            totalScore: 47,
+            averageScore: 65.5,
+            maxScore: 90,
+            minScore: 55.4,
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+        {
+            id: "m5gr84i",
+            name: "张纯菁",
+            clazz: "5秋综合刷题C班",
+            textNo: "C01",
+            totalScore: 88,
+            averageScore: 65.5,
+            maxScore: 90,
+            minScore: 55.4,
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -120,10 +216,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -131,10 +227,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -142,10 +238,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -153,10 +249,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -164,10 +260,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -175,10 +271,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -186,10 +282,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -197,10 +293,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -208,10 +304,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -219,10 +315,10 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
         {
             id: "m5gr84i",
@@ -230,50 +326,17 @@ async function getData(): Promise<Payment[]> {
             clazz: "5秋综合刷题C班",
             textNo: "C01",
             totalScore: 80,
-            averageScore:65.5,
+            averageScore: 65.5,
             maxScore: 90,
             minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
-        },
-        {
-            id: "m5gr84i",
-            name: "张纯菁",
-            clazz: "5秋综合刷题C班",
-            textNo: "C01",
-            totalScore: 80,
-            averageScore:65.5,
-            maxScore: 90,
-            minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
-        },
-        {
-            id: "m5gr84i",
-            name: "张纯菁",
-            clazz: "5秋综合刷题C班",
-            textNo: "C01",
-            totalScore: 80,
-            averageScore:65.5,
-            maxScore: 90,
-            minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
-        },
-        {
-            id: "m5gr84i",
-            name: "张纯菁",
-            clazz: "5秋综合刷题C班",
-            textNo: "C01",
-            totalScore: 80,
-            averageScore:65.5,
-            maxScore: 90,
-            minScore: 55.4,
-            errNum: [1,2,3,4,5,6,7,8,9,10]
+            errNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
     ]
 }
 
 
 const ScoreInput = () => {
-    const [tableData, setTableData] = useState<Payment[]>([])
+    const [tableData, setTableData] = useState<GradeData[]>([])
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [canUploadTemplate, setCanUploadTemplate] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')

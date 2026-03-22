@@ -1,13 +1,25 @@
 "use client"
 
 import { Button } from "./ui/button"
+import { ChevronDownIcon } from "lucide-react"
 import {
   ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 import {
   Table,
@@ -17,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import * as React from "react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -27,11 +40,32 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
+
+  const [rowSelection, setRowSelection] = React.useState({})
+
   const table = useReactTable({
     data,
     columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     initialState: {
       pagination: {
         pageSize: 10, // 设置每页显示10条记录，可以根据需要修改此数值
@@ -42,6 +76,39 @@ export function DataTable<TData, TValue>({
 
   return ( 
     <div className="flex flex-col h-full">
+      <div className="flex justify-end mr-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant="outline" className="ml-auto">
+              列显示
+              <ChevronDownIcon className={`h-4 w-4 opacity-50 transition-transform duration-200 }`} />
+
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter(
+                (column) => column.getCanHide()
+              )
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      
       <div className="overflow-hidden rounded-md border m-3 flex-grow">
         <Table>
           <TableHeader>
@@ -59,8 +126,10 @@ export function DataTable<TData, TValue>({
                     </TableHead>
                   )
                 })}
+                
               </TableRow>
             ))}
+            
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
