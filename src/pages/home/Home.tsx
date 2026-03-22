@@ -26,10 +26,10 @@ const Home = ({ children }: { children?: React.ReactNode }) => {
     <TooltipProvider>
       <SidebarProvider defaultOpen={true} style={{ "--sidebar-width": "11rem" }}>
         <AppSidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-        <main className="flex-l w-full flex flex-col h-full h-screen">
+        <main className="flex-l w-[calc(100%-11rem)] flex flex-col h-full h-screen">
           <SidebarTrigger />
           {children}
-          <div className="content flex-l w-full h-full bg-gray-50">
+          <div className="content flex-l w-full  h-full w bg-gray-50">
             {pageComponents[currentPage] || <div>404</div>}
           </div>
         </main>

@@ -336,6 +336,7 @@ async function getData(): Promise<GradeData[]> {
 
 
 const ScoreInput = () => {
+    const [selectedIds, setSelectedIds] = useState<string[]>([])
     const [tableData, setTableData] = useState<GradeData[]>([])
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [canUploadTemplate, setCanUploadTemplate] = useState(false)
@@ -352,6 +353,11 @@ const ScoreInput = () => {
         }
         fetchData()
     }, [])
+
+    const handleSelectionChange = (ids: string[]) => {
+        setSelectedIds(ids)
+        console.log("input selectedIds:", ids)
+    }
 
     const handleUpload = () => {
         fileInputRef.current?.click()
@@ -447,7 +453,7 @@ const ScoreInput = () => {
             </div>
             <Separator className="my-1" />
             <div className="w-full h-[90%]">
-                <DataTable columns={columns} data={tableData} />
+                <DataTable columns={columns} data={tableData} onSelectionChange={handleSelectionChange} />
             </div>
         </div>
 
