@@ -8,9 +8,6 @@ import { useRef, useState, useEffect } from "react"
 import { DataTable } from "@/components/data-table"
 
 
-
-
-
 export type GradeSearchData = {
     id: string,
     name: string,                        // 学生名字
@@ -518,8 +515,9 @@ const ScoreSearch = () => {
 
     return (
         <div>
-            <SearchField />
+            <SearchField ids={selectedIds} />
             <Separator className="my-1" />
+            
             <div className="w-full h-[90%]">
                 <DataTable columns={columns} 
                             data={data}

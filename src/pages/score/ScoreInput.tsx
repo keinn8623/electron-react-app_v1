@@ -366,7 +366,7 @@ const ScoreInput = () => {
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
         if (file) {
-            // Process the file here
+            
             console.log("Selected file:", file)
             try {
                 if (!window.electronAPI) {

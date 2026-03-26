@@ -8,9 +8,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ChevronDownIcon } from "lucide-react"
-import { useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 
-const SearchField = () => {
+
+interface SearchFieldProps {
+  ids?: string[];
+}
+const SearchField: React.FC<SearchFieldProps> = ({ ids }) => {
   const [searchValues, setSearchValues] = useState({
     name: "",
     clazz: "",
@@ -87,6 +91,7 @@ const SearchField = () => {
       endDate: null
     })
   };
+  
 
   return (
     <div className="flex flex-col items-center">
@@ -206,6 +211,12 @@ const SearchField = () => {
         >
           重置
         </Button>
+        {ids?.length !== 0 && <Button
+          className="m-2"
+          onClick={() => alert(ids)}
+        >
+          分析
+        </Button>}
       </div>
     </div>
   )
