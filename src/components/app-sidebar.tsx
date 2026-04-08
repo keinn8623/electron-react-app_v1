@@ -37,7 +37,7 @@ const menuItems = [
     icon: Users,
     items: [
       { title: "员工列表", url: "/staff" },
-      { title: "部门管理", url: "/department" },
+      { title: "帐号管理", url: "/accounts" },
       { title: "权限设置", url: "/permission" },
     ],
   },
@@ -94,6 +94,20 @@ export function MySidebarHeader() {
 }
 
 export function MySidebarFooter() {
+  const navigate = useNavigate()
+  const authToken = localStorage.getItem('authToken')
+  let userName = "用户"
+  
+  if (authToken) {
+    const authParts = authToken.split('-')
+    userName = authParts[0]
+  }
+  const signOut = () => {
+    if(authToken) {
+      localStorage.removeItem("authToken")
+    }
+    navigate("/login")
+  }
   return (
     <SidebarFooter>
       <SidebarMenu>
@@ -101,7 +115,7 @@ export function MySidebarFooter() {
           <DropdownMenu>
             <DropdownMenuTrigger >
               <SidebarMenuButton>
-                <User2 /> Username
+                <User2 /> {userName}
                 <ChevronUp className="ml-auto" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
@@ -112,12 +126,10 @@ export function MySidebarFooter() {
               <DropdownMenuItem>
                 <span>Account</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Billing</span>
+              <DropdownMenuItem onClick={signOut}>
+                <span >Sign out</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Sign out1</span>
-              </DropdownMenuItem>
+             
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>

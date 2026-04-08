@@ -368,6 +368,7 @@ const ScoreInput = () => {
         if (file) {
             
             console.log("Selected file:", file)
+            
             try {
                 if (!window.electronAPI) {
                     throw new Error("electronAPI not found")
